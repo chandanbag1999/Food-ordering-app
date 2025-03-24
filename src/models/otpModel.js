@@ -42,7 +42,7 @@ const otpSchema = new mongoose.Schema({
 
 
 // Hash OTP before saving
-OTPSchema.pre('save', async function(next) {
+otpSchema.pre('save', async function(next) {
   // Only hash the OTP if it's modified (or new)
   if (!this.isModified('otp')) return next();
   
@@ -58,10 +58,18 @@ OTPSchema.pre('save', async function(next) {
 });
 
 // Method to compare OTP
-OTPSchema.methods.compareOTP = async function(candidateOTP) {
+otpSchema.methods.compareOTP = async function(candidateOTP) {
   try {
-    return await bcrypt.compare(candidateOTP, this.otp);
+    console.log('Comparing OTP:', { 
+      stored: this.otp.substring(0, 3) + '...',
+      provided: candidateOTP.substring(0, 3) + '...'
+    });
+    
+    const result = await bcrypt.compare(candidateOTP, this.otp);
+    console.log('OTP comparison result:', result);
+    return result;
   } catch (error) {
+    console.error('Error comparing OTP:', error);
     throw new Error(error);
   }
 };

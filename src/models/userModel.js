@@ -21,11 +21,10 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     required: [true, "Phone number is required"],
-    minlength: [10, "Phone number must be at least 10 characters long"],
     trim: true,
     unique: true,
     sparse: true, // Allows null/undefined values to not trigger unique constraint
-    match: [/^[0-9]{10}$/, "Please use a valid phone number"],
+    match: [/^\+?[0-9]{10,15}$/, "Please use a valid phone number with optional country code"],
   },
   password: {
     type: String,
@@ -51,8 +50,13 @@ const userSchema = new mongoose.Schema({
   },
   // Profile data
   profilePicture: {
-    type: String,
-    default: 'default-profile.png'
+    url: {
+      type: String,
+      default: 'https://res.cloudinary.com/your-cloud-name/image/upload/v1/profile-pictures/default-avatar.png'
+    },
+    publicId: {
+      type: String
+    }
   },
   // Addresses
   address: {

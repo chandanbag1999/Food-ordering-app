@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const Session = require("../models/sessionModel");
-const { verifyToken } = require("../utils/jwtUtils");
+const { verifyAccessToken } = require("../utils/jwtUtils");
 
 
 /**
@@ -29,7 +29,7 @@ const protect = async (req, res, next) => {
 
     try {
       // Verify token
-      const decoded = verifyToken(token);
+      const decoded = verifyAccessToken(token);
 
       // Check if session exists and valid
       const session = await Session.findById(decoded.sessionId);
@@ -63,6 +63,7 @@ const protect = async (req, res, next) => {
 
       // Attach user and session to request
       req.user = user;
+      next();
     } catch (error) {
       return res.status(401).json({
         success: false,

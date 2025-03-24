@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Session = require("../models/sessionModel");
+const crypto = require('crypto');
 
 
 const generateAccessToken = (user, sessionId) => {
@@ -61,10 +62,13 @@ const createSession = async (user, device, ipAddress) => {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + expiryDays);
 
+  // Generate temporary token for initial creation to pass validation
+  const tempToken = crypto.randomBytes(20).toString('hex');
+
   // Create new session
   const session = await Session.create({
     userId: user._id,
-    token: '', // will be updated after token generation
+    token: tempToken, // Using temporary token to pass validation
     device,
     ipAddress,
     lastActive: new Date(),
