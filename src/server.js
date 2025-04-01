@@ -15,6 +15,9 @@ const fs = require("fs-extra");
 const authRoutes = require("./routes/authRoutes");
 const addressRoutes = require("./routes/addressRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const restaurantRoutes = require("./routes/restaurantRoutes");
+const menuItemRoutes = require("./routes/menuItemRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 // Create express app
 const app = express();
@@ -22,11 +25,42 @@ const app = express();
 // Create uploads directory if it doesn't exist
 fs.ensureDirSync('uploads');
 
+// Custom middleware to capture raw request body - fixed to avoid stream issues
+app.use((req, res, next) => {
+  // Only capture raw body for specific routes that need it
+  if (req.url.includes('/menu-items/') && (req.method === 'PUT' || req.method === 'POST')) {
+    let rawData = '';
+    
+    req.on('data', chunk => {
+      rawData += chunk.toString();
+    });
+    
+    req.on('end', () => {
+      req.rawBody = rawData;
+      if (rawData) {
+        console.log('Raw request body:', rawData);
+      }
+      next();
+    });
+  } else {
+    // For other routes, just pass through
+    next();
+  }
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan('dev'));
+
+// Add debugging middleware to log all requests
+app.use((req, res, next) => {
+  console.log('Request URL:', req.originalUrl);
+  console.log('Request Method:', req.method);
+  console.log('Request Headers:', JSON.stringify(req.headers));
+  next();
+});
 
 // Session middleware
 app.use(
@@ -52,6 +86,20 @@ app.get('/', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/addresses', addressRoutes);
 app.use('/api/v1/profile', profileRoutes);
+app.use("/api/v1/restaurants", restaurantRoutes);
+
+// Custom route handler for the specific URL pattern the user is trying to access
+app.put("/api/v1/restaurants/:restaurantId/:menuItemId/bulk-update", (req, res, next) => {
+  console.log('Custom route handler triggered');
+  // Modify the URL to match the expected pattern
+  req.url = `/api/v1/restaurants/${req.params.restaurantId}/menu-items/bulk-update`;
+  // Forward to the regular route handler
+  next();
+});
+
+// Nested routes for menu items and categories
+app.use("/api/v1/restaurants/:restaurantId/menu-items", menuItemRoutes);
+app.use("/api/v1/restaurants/:restaurantId/categories", categoryRoutes);
 
 // Error handler middleware
 app.use(errorHandler);

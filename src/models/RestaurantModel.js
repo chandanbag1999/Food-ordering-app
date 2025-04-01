@@ -1,11 +1,9 @@
-const { stat } = require('fs-extra');
 const mongoose = require('mongoose');
-const { create } = require('./userModel');
 
 const RestaurantSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Resturant name is required'],
+        required: [true, 'Restaurant name is required'],
     },
     ownerId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -97,28 +95,6 @@ const RestaurantSchema = new mongoose.Schema({
         min: 0,
         max: 5,
     },
-    // reviews: [
-    //     {
-    //         userId: {
-    //             type: mongoose.Schema.Types.ObjectId,
-    //             ref: 'User',
-    //         },
-    //         rating: {
-    //             type: Number,
-    //             required: [true, 'Rating is required'],
-    //             min: 0,
-    //             max: 5,
-    //         },
-    //         comment: {
-    //             type: String,
-    //             required: [true, 'Comment is required'],
-    //         },
-    //         createdAt: {
-    //             type: Date,
-    //             default: Date.now,
-    //         },
-    //     },
-    // ],
     reviewCount: {
         type: Number,
         default: 0,
@@ -141,6 +117,14 @@ const RestaurantSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    approvalStatus: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+    approvalRemarks: {
+        type: String
+    },
     approvedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -148,9 +132,6 @@ const RestaurantSchema = new mongoose.Schema({
     approvedAt: {
         type: Date,
     },
-
-
-    // Restaurant features
     features: {
         hasDelivery: {
             type: Boolean,
@@ -181,7 +162,6 @@ const RestaurantSchema = new mongoose.Schema({
             default: false,
         },
     },
-    // Delivery settings
     deliverySettings: {
         minOrderAmount: {
             type: Number,
@@ -197,14 +177,13 @@ const RestaurantSchema = new mongoose.Schema({
         },
         deliveryRadius: {
             type: Number,
-            default: 5, // in kilometers
+            default: 5,
         },
         estimatedDeliveryTime: {
             type: Number,
-            default: 30, // in minutes
+            default: 30,
         },
     },
-    // Payment settings
     paymentMethods: {
         acceptCash: {
             type: Boolean,
@@ -223,14 +202,6 @@ const RestaurantSchema = new mongoose.Schema({
             default: false,
         },
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
-    },
 }, {
     timestamps: true,
     toJSON: { virtuals: true },
@@ -245,23 +216,22 @@ RestaurantSchema.virtual('menuItems', {
     justOne: false,
 });
 
-// Method to check restaurent is open now
+// Method to check if restaurant is open now
 RestaurantSchema.methods.isOpenNow = function () {
-    const now  = new Date();
+    const now = new Date();
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const today = days[now.getDay()];
 
-    const todayHours = this.operatingHours[today];
+    const todayHours = this.openingHours[today];
 
     // check if today is closed
     if (todayHours.isClosed) {
         return false;
-    };
+    }
 
     // Parse opening and closing hours
     const openTime = todayHours.open.split(":");
     const closeTime = todayHours.close.split(":");
-
 
     const openHour = parseInt(openTime[0]);
     const openMinute = parseInt(openTime[1]);
@@ -272,15 +242,12 @@ RestaurantSchema.methods.isOpenNow = function () {
     const openDate = new Date(now);
     openDate.setHours(openHour, openMinute, 0, 0);
 
-
     const closeDate = new Date(now);
     closeDate.setHours(closeHour, closeMinute, 0, 0);
 
     // Check if current time is within opening hours and closing hours
     return now >= openDate && now <= closeDate;
-    
 };
-
 
 const Restaurant = mongoose.model('Restaurant', RestaurantSchema);
 module.exports = Restaurant;

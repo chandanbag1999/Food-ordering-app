@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-    resturentId: {
+    restaurantId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Restaurant',
         required: [true, 'Restaurant ID is required'],

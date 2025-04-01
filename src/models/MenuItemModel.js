@@ -67,9 +67,9 @@ const menuItemSchema = new mongoose.Schema({
     min: 0
   },
   category: {
-    type: String,
-    required: [true, 'Menu item category is required'],
-    trim: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: [true, 'Menu item category is required']
   },
   image: {
     type: String,
@@ -92,7 +92,7 @@ const menuItemSchema = new mongoose.Schema({
     // Customization options
     customizationGroups: [customizationGroupSchema],
     // Availability
-    isAvalable: {
+    isAvailable: {
         type: Boolean,
         default: true
     },
