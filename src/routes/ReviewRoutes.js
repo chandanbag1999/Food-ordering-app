@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Public routes
 router.get('/:reviewId', reviewController.getReview);
-router.get('/:restaurantId', reviewController.getAllRestaurantReviews); //TODO: not right position to get all reviews
+
 
 
 
