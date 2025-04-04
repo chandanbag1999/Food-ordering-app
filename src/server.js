@@ -20,6 +20,7 @@ const menuItemRoutes = require("./routes/menuItemRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const RestaurantOrderRoutes = require("./routes/RestaurantOrderRoutes");
+const reviewRoutes = require("./routes/ReviewRoutes");
 
 // Create express app
 const app = express();
@@ -90,6 +91,7 @@ app.use('/api/v1/addresses', addressRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use("/api/v1/restaurants", restaurantRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 // Custom route handler for the specific URL pattern the user is trying to access
 app.put("/api/v1/restaurants/:restaurantId/:menuItemId/bulk-update", (req, res, next) => {
