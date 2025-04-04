@@ -21,6 +21,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const RestaurantOrderRoutes = require("./routes/RestaurantOrderRoutes");
 const reviewRoutes = require("./routes/ReviewRoutes");
+const restaurantReviewRoutes = require('./routes/restaurantReviewRoutes');
 
 // Create express app
 const app = express();
@@ -102,10 +103,11 @@ app.put("/api/v1/restaurants/:restaurantId/:menuItemId/bulk-update", (req, res, 
   next();
 });
 
-// Nested routes for menu items and categories
+// Nested routes for menu items, categories, orders, and reviews 
 app.use("/api/v1/restaurants/:restaurantId/menu-items", menuItemRoutes);
 app.use("/api/v1/restaurants/:restaurantId/categories", categoryRoutes); 
 app.use("/api/v1/restaurants/:restaurantId/orders", RestaurantOrderRoutes);
+app.use('/api/v1/restaurants/:restaurantId/reviews', restaurantReviewRoutes);
 
 // Error handler middleware
 app.use(errorHandler);
