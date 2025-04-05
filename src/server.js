@@ -22,6 +22,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const RestaurantOrderRoutes = require("./routes/RestaurantOrderRoutes");
 const reviewRoutes = require("./routes/ReviewRoutes");
 const restaurantReviewRoutes = require('./routes/restaurantReviewRoutes');
+const userReviewRoutes = require("./routes/userReviewRoutes");
 
 // Create express app
 const app = express();
@@ -108,6 +109,7 @@ app.use("/api/v1/restaurants/:restaurantId/menu-items", menuItemRoutes);
 app.use("/api/v1/restaurants/:restaurantId/categories", categoryRoutes); 
 app.use("/api/v1/restaurants/:restaurantId/orders", RestaurantOrderRoutes);
 app.use('/api/v1/restaurants/:restaurantId/reviews', restaurantReviewRoutes);
+app.use('/api/v1/users/:userId/reviews', userReviewRoutes);
 
 // Error handler middleware
 app.use(errorHandler);
