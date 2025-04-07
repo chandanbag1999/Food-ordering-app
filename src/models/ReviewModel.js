@@ -124,6 +124,23 @@ reviewSchema.post('remove', function() {
   this.constructor.getAverageRating(this.restaurantId);
 });
 
+// Call getAverageRating after findOneAndUpdate (for soft deletes)
+reviewSchema.post('findOneAndUpdate', async function(doc) {
+  if (doc) {
+    await doc.constructor.getAverageRating(doc.restaurantId);
+  }
+});
+
+// Ensure that isActive is considered when calculating average ratings
+reviewSchema.pre('aggregate', function() {
+  // Add isActive: true to the match stage if it exists
+  this.pipeline().forEach(stage => {
+    if (stage.$match && stage.$match.restaurantId && !stage.$match.hasOwnProperty('isActive')) {
+      stage.$match.isActive = true;
+    }
+  });
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

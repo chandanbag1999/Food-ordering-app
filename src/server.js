@@ -22,6 +22,13 @@ const orderRoutes = require("./routes/orderRoutes");
 const RestaurantOrderRoutes = require("./routes/RestaurantOrderRoutes");
 const reviewRoutes = require("./routes/ReviewRoutes");
 const restaurantReviewRoutes = require('./routes/restaurantReviewRoutes');
+const userReviewRoutes = require("./routes/userReviewRoutes");
+const favoriteRoutes = require('./routes/favoriteRoutes');
+const restaurantFavoriteRoutes = require('./routes/restaurantFavoriteRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const couponRoutes = require('./routes/couponRoutes');
+
+
 
 // Create express app
 const app = express();
@@ -93,6 +100,11 @@ app.use('/api/v1/profile', profileRoutes);
 app.use("/api/v1/restaurants", restaurantRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+app.use('/api/v1/favorites', favoriteRoutes);
+app.use('/api/v1/cart', cartRoutes);
+app.use('/api/v1/coupons', couponRoutes);
+
+
 
 // Custom route handler for the specific URL pattern the user is trying to access
 app.put("/api/v1/restaurants/:restaurantId/:menuItemId/bulk-update", (req, res, next) => {
@@ -103,11 +115,13 @@ app.put("/api/v1/restaurants/:restaurantId/:menuItemId/bulk-update", (req, res, 
   next();
 });
 
-// Nested routes for menu items, categories, orders, and reviews 
+// Nested routes for menu items, categories, orders, and reviews, and favorites
 app.use("/api/v1/restaurants/:restaurantId/menu-items", menuItemRoutes);
 app.use("/api/v1/restaurants/:restaurantId/categories", categoryRoutes); 
 app.use("/api/v1/restaurants/:restaurantId/orders", RestaurantOrderRoutes);
 app.use('/api/v1/restaurants/:restaurantId/reviews', restaurantReviewRoutes);
+app.use('/api/v1/restaurants/:restaurantId/favorites', restaurantFavoriteRoutes);
+app.use('/api/v1/users/:userId/reviews', userReviewRoutes);
 
 // Error handler middleware
 app.use(errorHandler);

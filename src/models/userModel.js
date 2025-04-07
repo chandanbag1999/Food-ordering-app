@@ -92,6 +92,17 @@ const userSchema = new mongoose.Schema({
   paymentMethod: [Object],
   savedAddresses: [Object],
 
+  // Coupon usage tracking
+  couponUsage: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  orderCount: {
+    type: Number,
+    default: 0
+  },
+
   // Account status
   isActive: {
     type: Boolean,
@@ -107,6 +118,8 @@ const userSchema = new mongoose.Schema({
     default: Date.now
   },
 },{timestamps: true});
+
+
 
 // Hash password before saving
 userSchema.pre('save', async function(next){
@@ -129,6 +142,24 @@ userSchema.methods.comparePassword = async function(candidatePassword){
   } catch (error) {
     throw new Error('Password comparison failed');
   }
+};
+
+// Method to track coupon usage
+userSchema.methods.trackCouponUsage = function(couponCode) {
+  if (!this.couponUsage) {
+    this.couponUsage = new Map();
+  }
+  
+  const currentUsage = this.couponUsage.get(couponCode) || 0;
+  this.couponUsage.set(couponCode, currentUsage + 1);
+  
+  return this;
+};
+
+// Method to increment order count
+userSchema.methods.incrementOrderCount = function() {
+  this.orderCount = (this.orderCount || 0) + 1;
+  return this;
 };
 
 
