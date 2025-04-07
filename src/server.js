@@ -25,6 +25,8 @@ const restaurantReviewRoutes = require('./routes/restaurantReviewRoutes');
 const userReviewRoutes = require("./routes/userReviewRoutes");
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const restaurantFavoriteRoutes = require('./routes/restaurantFavoriteRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const couponRoutes = require('./routes/couponRoutes');
 
 
 
@@ -99,6 +101,8 @@ app.use("/api/v1/restaurants", restaurantRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use('/api/v1/favorites', favoriteRoutes);
+app.use('/api/v1/cart', cartRoutes);
+app.use('/api/v1/coupons', couponRoutes);
 
 
 
