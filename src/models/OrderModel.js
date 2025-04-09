@@ -60,7 +60,9 @@ const orderSchema = new mongoose.Schema({
       'delivered',     // Order has been delivered
       'completed',     // Order is complete
       'cancelled',     // Order was cancelled
-      'refunded'       // Order was refunded
+      'refunded',       // Order was refunded
+      'refund_requested', // Refund has been requested
+      'refund_failed'  // Refund attempt failed
     ],
     default: 'pending'
   },
@@ -71,8 +73,12 @@ const orderSchema = new mongoose.Schema({
   },
   PaymentMethod: {
     type: String,
-    enum: ['cash', 'card', 'upi', 'wallet'],
+    enum: ['cash_on_delivery', 'card', 'credit_card', 'debit_card', 'upi', 'wallet', 'net_banking', 'online_payment'],
     required: true
+  },
+  paymentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Payment'
   },
   paymentStatus: {
     type: String,

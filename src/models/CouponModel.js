@@ -95,7 +95,6 @@ const CouponSchema = new mongoose.Schema({
 });
 
 // Index for faster lookups
-CouponSchema.index({ code: 1 });
 CouponSchema.index({ isActive: 1 });
 CouponSchema.index({ expiryDate: 1 });
 CouponSchema.index({ applicableRestaurants: 1 });
