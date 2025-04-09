@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Review = require("../models/ReviewModel");
 const Restaurant = require("../models/RestaurantModel");
-const Order = require("../models/OrderModel");
+const Order = require("../models/orderModel");
 const User = require("../models/userModel");
 
 // Get all review for a restaurant

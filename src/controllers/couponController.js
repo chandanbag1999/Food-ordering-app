@@ -1,7 +1,7 @@
 const Coupon = require('../models/CouponModel');
 const User = require('../models/userModel');
 const Restaurant = require('../models/RestaurantModel');
-const Order = require('../models/OrderModel');
+const Order = require('../models/orderModel');
 const Cart = require('../models/CartModel');
 const mongoose = require('mongoose');
 

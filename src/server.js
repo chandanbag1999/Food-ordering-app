@@ -27,6 +27,10 @@ const favoriteRoutes = require('./routes/favoriteRoutes');
 const restaurantFavoriteRoutes = require('./routes/restaurantFavoriteRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const couponRoutes = require('./routes/couponRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const paymentMethodRoutes = require('./routes/paymentMethodRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
+const receiptRoutes = require('./routes/receiptRoutes');
 
 
 
@@ -103,7 +107,10 @@ app.use("/api/v1/reviews", reviewRoutes);
 app.use('/api/v1/favorites', favoriteRoutes);
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/coupons', couponRoutes);
-
+app.use('/api/v1/payments', paymentRoutes);
+app.use('/api/v1/payment-methods', paymentMethodRoutes);
+app.use('/api/v1/webhooks', webhookRoutes);
+app.use('/api/v1/receipts', receiptRoutes);
 
 
 // Custom route handler for the specific URL pattern the user is trying to access
