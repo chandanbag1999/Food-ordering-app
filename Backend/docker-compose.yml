@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meallink-app
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGO_URI=mongodb://mongodb:27017/zomato
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+      - ./logs:/usr/src/app/logs
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - meallink-network
+
+  mongodb:
+    image: mongo:5
+    container_name: meallink-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - meallink-network
+
+  redis:
+    image: redis:alpine
+    container_name: meallink-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - meallink-network
+
+networks:
+  meallink-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  redis-data: 

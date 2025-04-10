@@ -1,11 +1,13 @@
 const express = require('express');
 const restaurantController = require('../controllers/restaurantController');
 const { protect, authorize } = require('../middleware/auth');
+const { cache } = require('../middleware/cacheMiddleware');
 
 const router = express.Router();
 
-// Public routes
-router.get('/', restaurantController.getRestaurants);
+// Public routes with caching
+router.get('/', cache(300), restaurantController.getRestaurants);
+router.get('/:restaurantId', cache(300), restaurantController.getRestaurant);
 
 // Restaurant owner routes
 router.get(
@@ -39,8 +41,6 @@ router.get(
 );
 
 // Generic routes that use :restaurantId parameter must come last
-router.get('/:restaurantId', restaurantController.getRestaurant);
-
 router.put(
     '/:restaurantId',
     protect,
